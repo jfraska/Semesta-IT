@@ -9,7 +9,7 @@ services:
     container_name: semesta_nginx_prod
     restart: unless-stopped
     ports:
-      - "8001:80"
+      - "8088:80"
     links:
       - semesta_prod
     volumes:
