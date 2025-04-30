@@ -15,17 +15,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
-# RUN npx prisma generate                   
+ENV NEXT_TELEMETRY_DISABLED=1         
 RUN npm run build
 
 ### Production image runner ###
 FROM base AS runner
 WORKDIR /app
-    
-# Set NODE_ENV
-# ARG NODE_ENV=production
-# ENV NODE_ENV=${NODE_ENV}
 
 # Disable Next.js telemetry
 # Learn more here: https://nextjs.org/telemetry
@@ -44,8 +39,7 @@ RUN chown nextjs:nodejs .next
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# COPY --chown=nextjs:nodejs prisma ./prisma/                
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static       
 
 USER nextjs
 
