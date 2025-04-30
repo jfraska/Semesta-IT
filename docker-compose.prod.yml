@@ -1,0 +1,28 @@
+version: "3.8"
+
+networks:
+  semesta-i-prod:
+
+services:
+  nginx_frontend_prod:
+    image: nginx:stable
+    container_name: semesta_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "8001:80"
+    links:
+      - frontend_prod
+    volumes:
+      - ./docker/nginx/site-prod.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./docker/logs/nginx:/var/logs/nginx:rw
+    depends_on:
+      - frontend_prod
+    networks:
+      - semesta-i-prod
+  frontend_prod:
+    build:
+      context: .
+    container_name: semesta_prod
+    env_file: .env
+    networks:
+      - semesta-i-prod

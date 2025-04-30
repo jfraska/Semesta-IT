@@ -1,0 +1,28 @@
+version: "3.8"
+
+networks:
+  semesta-i-dev:
+
+services:
+  nginx_semesta_dev:
+    image: nginx:stable
+    container_name: semesta_nginx_dev
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    links:
+      - semesta_dev
+    volumes:
+      - ./docker/nginx/site.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./docker/logs/nginx:/var/logs/nginx:rw
+    depends_on:
+      - semesta_dev
+    networks:
+      - semesta-i-dev
+  semesta_dev:
+    build:
+      context: .
+    container_name: semesta_dev
+    env_file: .env
+    networks:
+      - semesta-i-dev
